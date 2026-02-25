@@ -2655,16 +2655,16 @@ initExportScreen();
 
 function updateExportPreview() {
 const c = CIRCUITS[exportCircuitIdx];
-const hasSummary = document.getElementById(‘opt-summary’)?.checked;
-const hasDetail = document.getElementById(‘opt-detail’)?.checked;
-const hasNotes = document.getElementById(‘opt-notes’)?.checked;
+const hasSummary = document.getElementById(‘opt-summary’).checked;
+const hasDetail = document.getElementById(‘opt-detail’).checked;
+const hasNotes = document.getElementById(‘opt-notes’).checked;
 let pages = 1; // cover
 if (hasSummary) pages += 1;
 if (hasDetail) pages += c.virages.length;
 const noteCount = c.virages.filter((*,vi)=>(notes[c.id+’*’+vi]||’’).trim()).length;
 const photoCount = c.virages.reduce((acc,*,vi)=>acc+([‘fr’,‘ap’,‘so’,‘ae’].filter(t=>photos[c.id+’*’+vi+’_’+t]).length),0);
 const el = document.getElementById(‘export-preview-content’);
-if (el) el.innerHTML = `📄 ${pages} pages au total<br> 🏁 Circuit : ${c.name.split('(')[0].trim()}<br> 📊 ${c.virages.length} virages documentés<br> ${noteCount>0 ? '📝 ' + noteCount + ' note(s) rédigée(s)<br>' : ''} ${photoCount>0 ? '📷 ' + photoCount + ' photo(s) importée(s)<br>' : ''} ${profilData?.nom ? '👤 Pilote : ' + profilData.prenom + ' ' + profilData.nom.toUpperCase() : ''}`;
+if (el) el.innerHTML = `📄 ${pages} pages au total<br> 🏁 Circuit : ${c.name.split('(')[0].trim()}<br> 📊 ${c.virages.length} virages documentés<br> ${noteCount>0 ? '📝 ' + noteCount + ' note(s) rédigée(s)<br>' : ''} ${photoCount>0 ? '📷 ' + photoCount + ' photo(s) importée(s)<br>' : ''} ${(profilData && profilData.nom) ? '👤 Pilote : ' + profilData.prenom + ' ' + profilData.nom.toUpperCase() : ''}`;
 }
 
 // ════════════════════════════
@@ -2688,9 +2688,9 @@ const W = 210, H = 297;
 ```
   // ── Options ──
   const circ        = CIRCUITS[exportCircuitIdx];
-  const hasSummary  = document.getElementById('opt-summary')?.checked !== false;
-  const hasDetail   = document.getElementById('opt-detail')?.checked !== false;
-  const hasNotes    = document.getElementById('opt-notes')?.checked !== false;
+  const hasSummary  = document.getElementById('opt-summary').checked !== false;
+  const hasDetail   = document.getElementById('opt-detail').checked !== false;
+  const hasNotes    = document.getElementById('opt-notes').checked !== false;
 
   // ── Helpers ──
   const hexRGB = h => {
@@ -2906,7 +2906,7 @@ const W = 210, H = 297;
   }
 
   // Save
-  const pname = profilData?.nom ? profilData.nom.toUpperCase() + '_' : '';
+  const pname = (profilData && profilData.nom) ? profilData.nom.toUpperCase() + '_' : '';
   const fname = 'DriveBook_' + pname + circ.name.split('(')[0].trim().replace(/\s+/g,'_').replace(/[^A-Za-z0-9_]/g,'') + '_Briefing.pdf';
   doc.save(fname);
 
@@ -3099,12 +3099,12 @@ setUnit(profilData.unit || ‘kmh’, false);
 }
 
 function updateProfilDisplay() {
-const prenom = document.getElementById(‘prof-prenom’)?.value || ‘’;
-const nom    = document.getElementById(‘prof-nom’)?.value    || ‘’;
-const num    = document.getElementById(‘prof-numero’)?.value || ‘00’;
-const cat    = document.getElementById(‘prof-categorie’)?.value || ‘PROTO / LMP’;
-const voiture= document.getElementById(‘prof-voiture’)?.value || ‘’;
-const equipe = document.getElementById(‘prof-equipe’)?.value  || ‘’;
+const prenom = document.getElementById(‘prof-prenom’).value || ‘’;
+const nom    = document.getElementById(‘prof-nom’).value    || ‘’;
+const num    = document.getElementById(‘prof-numero’).value || ‘00’;
+const cat    = document.getElementById(‘prof-categorie’).value || ‘PROTO / LMP’;
+const voiture= document.getElementById(‘prof-voiture’).value || ‘’;
+const equipe = document.getElementById(‘prof-equipe’).value  || ‘’;
 
 const nameEl = document.getElementById(‘prof-name-display’);
 if (nameEl) nameEl.textContent = [prenom, nom.toUpperCase()].filter(Boolean).join(’ ’) || ‘TON NOM’;
@@ -3121,12 +3121,12 @@ if (teamEl) teamEl.textContent = [voiture, equipe].filter(Boolean).join(’ · �
 
 function saveProfil() {
 profilData = {
-prenom:    document.getElementById(‘prof-prenom’)?.value    || ‘’,
-nom:       document.getElementById(‘prof-nom’)?.value       || ‘’,
-numero:    document.getElementById(‘prof-numero’)?.value    || ‘00’,
-categorie: document.getElementById(‘prof-categorie’)?.value || ‘PROTO / LMP’,
-voiture:   document.getElementById(‘prof-voiture’)?.value   || ‘’,
-equipe:    document.getElementById(‘prof-equipe’)?.value    || ‘’,
+prenom:    document.getElementById(‘prof-prenom’).value    || ‘’,
+nom:       document.getElementById(‘prof-nom’).value       || ‘’,
+numero:    document.getElementById(‘prof-numero’).value    || ‘00’,
+categorie: document.getElementById(‘prof-categorie’).value || ‘PROTO / LMP’,
+voiture:   document.getElementById(‘prof-voiture’).value   || ‘’,
+equipe:    document.getElementById(‘prof-equipe’).value    || ‘’,
 avatar:    profilData.avatar,
 unit:      profilData.unit,
 };
@@ -3384,7 +3384,7 @@ const exportObj = {
 version: ‘1.0’,
 app: ‘DriveBook’,
 exported: new Date().toISOString(),
-pilot: profilData?.nom ? (profilData.prenom||’’) + ’ ’ + profilData.nom : ‘’,
+pilot: (profilData && profilData.nom) ? (profilData.prenom||’’) + ’ ’ + profilData.nom : ‘’,
 circuit: {
 id:      c.id,
 name:    c.name,
@@ -3636,7 +3636,7 @@ return dirs[Math.round(deg / 45) % 8];
 function renderMeteo(wx, coords) {
 const icon = WX_CODE[wx.code] || ‘🌤’;
 const desc = currentLang===‘en’
-? (WX_DESC_EN?.[wx.code] || WX_DESC[wx.code] || ‘’)
+? ((WX_DESC_EN && WX_DESC_EN[wx.code]) || WX_DESC[wx.code] || ‘’)
 : (WX_DESC[wx.code] || ‘’);
 
 const tempColor = wx.temp < 8 ? ‘#64b5f6’ : wx.temp < 18 ? ‘#81c784’ : wx.temp < 28 ? ‘#ffb74d’ : ‘#ef5350’;
@@ -3660,7 +3660,7 @@ updEl.style.display = ‘block’;
 
 // 3-day forecast
 const forecastEl = document.getElementById(‘meteo-forecast’);
-if (forecastEl && wx.forecast?.length) {
+if (forecastEl && (wx.forecast && wx.forecast.length)) {
 const days = currentLang===‘en’
 ? [‘Sun’,‘Mon’,‘Tue’,‘Wed’,‘Thu’,‘Fri’,‘Sat’]
 : [‘Dim’,‘Lun’,‘Mar’,‘Mer’,‘Jeu’,‘Ven’,‘Sam’];
