@@ -1628,13 +1628,13 @@ function G(id){
   hist.push(cur);
   p.classList.remove('active');
   p.classList.add('exit-l');
-  setTimeout(()=>p.classList.remove('exit-l'),220);
+  setTimeout(function(){p.classList.remove('exit-l');},220);
   n.classList.add('active');
   // Update tab bar highlight
   var tabMap = {sh:'tab-sh',sl:'tab-sl',spl:'tab-spl',sprof:'tab-sprof'};
-  document.querySelectorAll('.ti').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.ti').forEach(function(t){t.classList.remove('on');});
   var tid = tabMap[id];
-  if(tid) document.querySelectorAll('#'+tid).forEach(t=>t.classList.add('on'));
+  if(tid) document.querySelectorAll('#'+tid).forEach(function(t){t.classList.add('on');});
   if(id==='sp')initPL();
   if(id==='sex')setTimeout(initExportScreen,50);
   if(id==='spl')setTimeout(initSPL,50);
